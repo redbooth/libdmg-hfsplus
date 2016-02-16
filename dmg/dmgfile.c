@@ -99,6 +99,7 @@ static void cacheRun(DMG* dmg, BLKXTable* blkx, int run) {
             exit(1);
 			break;
     }
+    free(inBuffer);
 	
     dmg->runType = blkx->runs[run].type;
 	dmg->runStart = (blkx->runs[run].sectorStart + blkx->firstSectorNumber) * SECTOR_SIZE;
@@ -274,14 +275,16 @@ io_func* seekDmgPartition(io_func* toReturn, int partition) {
 	if(partition >= 0) {
 		((DMG*)toReturn->data)->offset = partitions[partition].pmPyPartStart * BlockSize;
 	} else {
+		Partition* part = partitions;
 		for(i = 0; i < numPartitions; i++) {
-			if(strcmp((char*)partitions->pmParType, "Apple_HFSX") == 0 || strcmp((char*)partitions->pmParType, "Apple_HFS") == 0) {
-				((DMG*)toReturn->data)->offset = partitions->pmPyPartStart * BlockSize;
+			if(strcmp((char*)part->pmParType, "Apple_HFSX") == 0 || strcmp((char*)part->pmParType, "Apple_HFS") == 0) {
+				((DMG*)toReturn->data)->offset = part->pmPyPartStart * BlockSize;
 				break;
 			}
-			partitions = (Partition*)((uint8_t*)partitions + BlockSize);
+			part = (Partition*)((uint8_t*)part + BlockSize);
 		}
 	}
+	free(partitions);
 
 	return toReturn;
 }

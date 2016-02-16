@@ -235,10 +235,12 @@ typedef struct ResourceKey {
 	FlipDataFunc flipData;
 } ResourceKey;
 
+#define SHA1_DIGEST_SIZE 20
+
 typedef struct {
-	unsigned long state[5];
-	unsigned long count[2];
-	unsigned char buffer[64];
+	uint32_t state[5];
+	uint32_t count[2];
+	uint8_t buffer[64];
 } SHA1_CTX;
 
 typedef struct {
@@ -261,7 +263,7 @@ static inline void writeUInt32(AbstractFile* file, uint32_t data) {
 	ASSERT(file->write(file, &data, sizeof(data)) == sizeof(data), "fwrite");
 }
 
-static inline uint32_t readUInt64(AbstractFile* file) {
+static inline uint64_t readUInt64(AbstractFile* file) {
 	uint64_t data;
 	
 	ASSERT(file->read(file, &data, sizeof(data)) == sizeof(data), "fread");
@@ -293,10 +295,9 @@ extern "C" {
 	void CRCProxy(void* token, const unsigned char* data, size_t len);
 	void CRCZeroesProxy(void* token, size_t len);
 
-	void SHA1Transform(unsigned long state[5], const unsigned char buffer[64]);
 	void SHA1Init(SHA1_CTX* context);
-	void SHA1Update(SHA1_CTX* context, const unsigned char* data, unsigned int len);
-	void SHA1Final(unsigned char digest[20], SHA1_CTX* context);
+	void SHA1Update(SHA1_CTX* context, const uint8_t* data, const size_t len);
+	void SHA1Final(uint8_t digest[SHA1_DIGEST_SIZE], SHA1_CTX* context);
 
 	void flipUDIFChecksum(UDIFChecksum* o, char out);
 	void readUDIFChecksum(AbstractFile* file, UDIFChecksum* o);

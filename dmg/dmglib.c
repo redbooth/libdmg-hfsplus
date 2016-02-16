@@ -2,6 +2,7 @@
 #include "common.h"
 #include "abstractfile.h"
 #include <dmg/dmg.h>
+#include <dmg/adc.h>
 #include <dmg/dmgfile.h>
 
 uint32_t calculateMasterChecksum(ResourceKey* resources);
@@ -126,6 +127,8 @@ int buildDmg(AbstractFile* abstractIn, AbstractFile* abstractOut) {
 	nsiz = NULL;
     
 	memset(&dataForkToken, 0, sizeof(ChecksumToken));
+	memset(koly.fUDIFMasterChecksum.data, 0, sizeof(koly.fUDIFMasterChecksum.data));
+	memset(koly.fUDIFDataForkChecksum.data, 0, sizeof(koly.fUDIFDataForkChecksum.data));
 	
 	printf("Creating and writing DDM and partition map...\n"); fflush(stdout);
 	
@@ -298,7 +301,9 @@ int convertToDMG(AbstractFile* abstractIn, AbstractFile* abstractOut) {
 	nsiz = NULL;
 	myNSiz = NULL;
 	memset(&dataForkToken, 0, sizeof(ChecksumToken));
-	
+	memset(koly.fUDIFMasterChecksum.data, 0, sizeof(koly.fUDIFMasterChecksum.data));
+	mmemset(koly.fUDIFDataForkChecksum.data, 0, sizeof(koly.fUDIFDataForkChecksum.data));
+
 	partitions = (Partition*) malloc(SECTOR_SIZE);
 	
 	printf("Processing DDM...\n"); fflush(stdout);
