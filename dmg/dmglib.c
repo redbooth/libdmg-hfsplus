@@ -302,7 +302,7 @@ int convertToDMG(AbstractFile* abstractIn, AbstractFile* abstractOut) {
 	myNSiz = NULL;
 	memset(&dataForkToken, 0, sizeof(ChecksumToken));
 	memset(koly.fUDIFMasterChecksum.data, 0, sizeof(koly.fUDIFMasterChecksum.data));
-	mmemset(koly.fUDIFDataForkChecksum.data, 0, sizeof(koly.fUDIFDataForkChecksum.data));
+	memset(koly.fUDIFDataForkChecksum.data, 0, sizeof(koly.fUDIFDataForkChecksum.data));
 
 	partitions = (Partition*) malloc(SECTOR_SIZE);
 	
